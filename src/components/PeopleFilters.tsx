@@ -1,16 +1,78 @@
+import { useSearchParams } from 'react-router-dom';
+import cn from 'classnames';
+
 export const PeopleFilters = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const updateSearchParams = (key: string, value: string | null) => {
+    const newParams = new URLSearchParams(searchParams);
+
+    if (key === 'century') {
+      if (value === null) {
+        newParams.delete(key);
+      } else if (searchParams.has(key, value)) {
+        newParams.delete(key, value);
+      } else if (!searchParams.has(key, value)) {
+        newParams.append(key, value);
+      }
+
+      setSearchParams(newParams);
+
+      return;
+    }
+
+    if (value === null) {
+      newParams.delete(key);
+    } else if (!searchParams.has(key, value)) {
+      if (searchParams.has(key)) {
+        newParams.delete(key);
+      }
+
+      newParams.append(key, value);
+    }
+
+    setSearchParams(newParams);
+  };
+
   return (
     <nav className="panel">
       <p className="panel-heading">Filters</p>
 
       <p className="panel-tabs" data-cy="SexFilter">
-        <a className="is-active" href="#/people">
+        <a
+          href="#"
+          className={cn({ 'is-active': !searchParams.has('sex') })}
+          onClick={event => {
+            event.preventDefault();
+            updateSearchParams('sex', null);
+          }}
+        >
           All
         </a>
-        <a className="" href="#/people?sex=m">
+        <a
+          href="#"
+          className={cn({
+            'is-active':
+              searchParams.has('sex') && searchParams.get('sex') === 'm',
+          })}
+          onClick={event => {
+            event.preventDefault();
+            updateSearchParams('sex', 'm');
+          }}
+        >
           Male
         </a>
-        <a className="" href="#/people?sex=f">
+        <a
+          href="#"
+          className={cn({
+            'is-active':
+              searchParams.has('sex') && searchParams.get('sex') === 'f',
+          })}
+          onClick={event => {
+            event.preventDefault();
+            updateSearchParams('sex', 'f');
+          }}
+        >
           Female
         </a>
       </p>
@@ -22,6 +84,12 @@ export const PeopleFilters = () => {
             type="search"
             className="input"
             placeholder="Search"
+            value={searchParams.get('query') || ''}
+            onChange={event => {
+              event.preventDefault();
+
+              updateSearchParams('query', event.target.value);
+            }}
           />
 
           <span className="icon is-left">
@@ -35,40 +103,95 @@ export const PeopleFilters = () => {
           <div className="level-left">
             <a
               data-cy="century"
-              className="button mr-1"
+              className={cn('button mr-1', {
+                'is-info':
+                  searchParams.has('century') &&
+                  searchParams
+                    .getAll('century')
+                    .some(century => century === '16'),
+              })}
               href="#/people?centuries=16"
+              onClick={event => {
+                event.preventDefault();
+
+                updateSearchParams('century', '16');
+              }}
             >
               16
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
+              className={cn('button mr-1', {
+                'is-info':
+                  searchParams.has('century') &&
+                  searchParams
+                    .getAll('century')
+                    .some(century => century === '17'),
+              })}
               href="#/people?centuries=17"
+              onClick={event => {
+                event.preventDefault();
+
+                updateSearchParams('century', '17');
+              }}
             >
               17
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
+              className={cn('button mr-1', {
+                'is-info':
+                  searchParams.has('century') &&
+                  searchParams
+                    .getAll('century')
+                    .some(century => century === '18'),
+              })}
               href="#/people?centuries=18"
+              onClick={event => {
+                event.preventDefault();
+
+                updateSearchParams('century', '18');
+              }}
             >
               18
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1 is-info"
+              className={cn('button mr-1', {
+                'is-info':
+                  searchParams.has('century') &&
+                  searchParams
+                    .getAll('century')
+                    .some(century => century === '19'),
+              })}
               href="#/people?centuries=19"
+              onClick={event => {
+                event.preventDefault();
+
+                updateSearchParams('century', '19');
+              }}
             >
               19
             </a>
 
             <a
               data-cy="century"
-              className="button mr-1"
+              className={cn('button mr-1', {
+                'is-info':
+                  searchParams.has('century') &&
+                  searchParams
+                    .getAll('century')
+                    .some(century => century === '20'),
+              })}
               href="#/people?centuries=20"
+              onClick={event => {
+                event.preventDefault();
+
+                updateSearchParams('century', '20');
+              }}
             >
               20
             </a>
@@ -79,6 +202,11 @@ export const PeopleFilters = () => {
               data-cy="centuryALL"
               className="button is-success is-outlined"
               href="#/people"
+              onClick={event => {
+                event.preventDefault();
+
+                updateSearchParams('century', null);
+              }}
             >
               All
             </a>
@@ -87,7 +215,15 @@ export const PeopleFilters = () => {
       </div>
 
       <div className="panel-block">
-        <a className="button is-link is-outlined is-fullwidth" href="#/people">
+        <a
+          className="button is-link is-outlined is-fullwidth"
+          href="#/people"
+          onClick={event => {
+            event.preventDefault();
+
+            setSearchParams({});
+          }}
+        >
           Reset all filters
         </a>
       </div>

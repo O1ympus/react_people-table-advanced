@@ -51,7 +51,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Name
               <a
-                href="#/people?sort=name"
+                href="#"
                 onClick={event => {
                   event.preventDefault();
                   handleSortBy('name');
@@ -60,12 +60,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 <span className="icon">
                   <i
                     className={cn('fas', {
-                      'fa-sort': !searchParams.has('sort', 'name'),
+                      'fa-sort': searchParams.get('sort') !== 'name',
                       'fa-sort-up':
-                        searchParams.has('sort', 'name') &&
+                        searchParams.get('sort') === 'name' &&
                         !searchParams.has('order'),
                       'fa-sort-down':
-                        searchParams.has('sort', 'name') &&
+                        searchParams.get('sort') === 'name' &&
                         searchParams.has('order'),
                     })}
                   />
@@ -77,7 +77,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Sex
               <a
-                href="#/people?sort=sex"
+                href="#"
                 onClick={event => {
                   event.preventDefault();
                   handleSortBy('sex');
@@ -86,12 +86,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 <span className="icon">
                   <i
                     className={cn('fas', {
-                      'fa-sort': !searchParams.has('sort', 'sex'),
+                      'fa-sort': searchParams.get('sort') !== 'sex',
                       'fa-sort-up':
-                        searchParams.has('sort', 'sex') &&
+                        searchParams.get('sort') === 'sex' &&
                         !searchParams.has('order'),
                       'fa-sort-down':
-                        searchParams.has('sort', 'sex') &&
+                        searchParams.get('sort') === 'sex' &&
                         searchParams.has('order'),
                     })}
                   />
@@ -103,7 +103,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Born
               <a
-                href="#/people?sort=born&amp;order=desc"
+                href="#"
                 onClick={event => {
                   event.preventDefault();
                   handleSortBy('born');
@@ -112,12 +112,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 <span className="icon">
                   <i
                     className={cn('fas', {
-                      'fa-sort': !searchParams.has('sort', 'born'),
+                      'fa-sort': searchParams.get('sort') !== 'born',
                       'fa-sort-up':
-                        searchParams.has('sort', 'born') &&
+                        searchParams.get('sort') === 'born' &&
                         !searchParams.has('order'),
                       'fa-sort-down':
-                        searchParams.has('sort', 'born') &&
+                        searchParams.get('sort') === 'born' &&
                         searchParams.has('order'),
                     })}
                   />
@@ -129,7 +129,7 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
             <span className="is-flex is-flex-wrap-nowrap">
               Died
               <a
-                href="#/people?sort=died"
+                href="#"
                 onClick={event => {
                   event.preventDefault();
                   handleSortBy('died');
@@ -138,12 +138,12 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
                 <span className="icon">
                   <i
                     className={cn('fas', {
-                      'fa-sort': !searchParams.has('sort', 'died'),
+                      'fa-sort': searchParams.get('sort') !== 'died',
                       'fa-sort-up':
-                        searchParams.has('sort', 'died') &&
+                        searchParams.get('sort') === 'died' &&
                         !searchParams.has('order'),
                       'fa-sort-down':
-                        searchParams.has('sort', 'died') &&
+                        searchParams.get('sort') === 'died' &&
                         searchParams.has('order'),
                     })}
                   />
@@ -157,68 +157,78 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
       </thead>
 
       <tbody>
-        {people.map(person => (
-          <tr
-            data-cy="person"
-            key={person.slug}
-            className={cn({
-              'has-background-warning': person.slug === slug,
-            })}
-          >
-            <td>
-              <NavLink
-                to={{
-                  pathname: `/people/${person.slug}`,
-                  search: location.search,
-                }}
-                className={cn({ 'has-text-danger': person.sex === 'f' })}
-              >
-                {person.name}
-              </NavLink>
-            </td>
+        {people.map(person => {
+          const motherSlug = person.motherName
+            ? getMotherOrFatherByName(people, person.motherName)
+            : null;
 
-            <td>{person.sex}</td>
-            <td>{person.born}</td>
-            <td>{person.died}</td>
-            <td>
-              {person.motherName ? (
-                getMotherOrFatherByName(people, person.motherName) ? (
-                  <NavLink
-                    to={{
-                      pathname: `/people/${getMotherOrFatherByName(people, person.motherName)}`,
-                      search: location.search,
-                    }}
-                    className="has-text-danger"
-                  >
-                    {person.motherName}
-                  </NavLink>
+          const fatherSlug = person.fatherName
+            ? getMotherOrFatherByName(people, person.fatherName)
+            : null;
+
+          return (
+            <tr
+              data-cy="person"
+              key={person.slug}
+              className={cn({
+                'has-background-warning': person.slug === slug,
+              })}
+            >
+              <td>
+                <NavLink
+                  to={{
+                    pathname: `/people/${person.slug}`,
+                    search: location.search,
+                  }}
+                  className={cn({ 'has-text-danger': person.sex === 'f' })}
+                >
+                  {person.name}
+                </NavLink>
+              </td>
+
+              <td>{person.sex}</td>
+              <td>{person.born}</td>
+              <td>{person.died}</td>
+              <td>
+                {person.motherName ? (
+                  motherSlug ? (
+                    <NavLink
+                      to={{
+                        pathname: `/people/${motherSlug}`,
+                        search: location.search,
+                      }}
+                      className="has-text-danger"
+                    >
+                      {person.motherName}
+                    </NavLink>
+                  ) : (
+                    person.motherName
+                  )
                 ) : (
-                  person.motherName
-                )
-              ) : (
-                '-'
-              )}
-            </td>
-            <td>
-              {person.fatherName ? (
-                getMotherOrFatherByName(people, person.fatherName) ? (
-                  <NavLink
-                    to={{
-                      pathname: `/people/${getMotherOrFatherByName(people, person.fatherName)}`,
-                      search: location.search,
-                    }}
-                  >
-                    {person.fatherName}
-                  </NavLink>
+                  '-'
+                )}
+              </td>
+              <td>
+                {person.fatherName ? (
+                  fatherSlug ? (
+                    <NavLink
+                      to={{
+                        pathname: `/people/${fatherSlug}`,
+                        search: location.search,
+                      }}
+                    >
+                      {person.fatherName}
+                    </NavLink>
+                  ) : (
+                    person.fatherName
+                  )
                 ) : (
-                  person.fatherName
-                )
-              ) : (
-                '-'
-              )}
-            </td>
-          </tr>
-        ))}
+                  '-'
+                )}
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );

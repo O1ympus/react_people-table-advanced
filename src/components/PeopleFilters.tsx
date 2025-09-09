@@ -7,12 +7,17 @@ export const PeopleFilters = () => {
   const updateSearchParams = (key: string, value: string | null) => {
     const newParams = new URLSearchParams(searchParams);
 
-    if (key === 'century') {
+    if (key === 'centuries') {
+      const allCenturies = searchParams.getAll('centuries');
+
       if (value === null) {
         newParams.delete(key);
-      } else if (searchParams.has(key, value)) {
+      } else if (allCenturies.includes(value)) {
+        const updated = allCenturies.filter(c => c !== value);
+
         newParams.delete(key, value);
-      } else if (!searchParams.has(key, value)) {
+        updated.forEach(c => newParams.append(key, c));
+      } else {
         newParams.append(key, value);
       }
 
@@ -107,16 +112,16 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={cn('button mr-1', {
                 'is-info':
-                  searchParams.has('century') &&
+                  searchParams.has('centuries') &&
                   searchParams
-                    .getAll('century')
+                    .getAll('centuries')
                     .some(century => century === '16'),
               })}
               href="#"
               onClick={event => {
                 event.preventDefault();
 
-                updateSearchParams('century', '16');
+                updateSearchParams('centuries', '16');
               }}
             >
               16
@@ -126,16 +131,16 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={cn('button mr-1', {
                 'is-info':
-                  searchParams.has('century') &&
+                  searchParams.has('centuries') &&
                   searchParams
-                    .getAll('century')
+                    .getAll('centuries')
                     .some(century => century === '17'),
               })}
               href="#"
               onClick={event => {
                 event.preventDefault();
 
-                updateSearchParams('century', '17');
+                updateSearchParams('centuries', '17');
               }}
             >
               17
@@ -145,16 +150,16 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={cn('button mr-1', {
                 'is-info':
-                  searchParams.has('century') &&
+                  searchParams.has('centuries') &&
                   searchParams
-                    .getAll('century')
+                    .getAll('centuries')
                     .some(century => century === '18'),
               })}
               href="#"
               onClick={event => {
                 event.preventDefault();
 
-                updateSearchParams('century', '18');
+                updateSearchParams('centuries', '18');
               }}
             >
               18
@@ -164,16 +169,16 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={cn('button mr-1', {
                 'is-info':
-                  searchParams.has('century') &&
+                  searchParams.has('centuries') &&
                   searchParams
-                    .getAll('century')
+                    .getAll('centuries')
                     .some(century => century === '19'),
               })}
               href="#"
               onClick={event => {
                 event.preventDefault();
 
-                updateSearchParams('century', '19');
+                updateSearchParams('centuries', '19');
               }}
             >
               19
@@ -183,16 +188,16 @@ export const PeopleFilters = () => {
               data-cy="century"
               className={cn('button mr-1', {
                 'is-info':
-                  searchParams.has('century') &&
+                  searchParams.has('centuries') &&
                   searchParams
-                    .getAll('century')
+                    .getAll('centuries')
                     .some(century => century === '20'),
               })}
               href="#"
               onClick={event => {
                 event.preventDefault();
 
-                updateSearchParams('century', '20');
+                updateSearchParams('centuries', '20');
               }}
             >
               20
@@ -207,7 +212,7 @@ export const PeopleFilters = () => {
               onClick={event => {
                 event.preventDefault();
 
-                updateSearchParams('century', null);
+                updateSearchParams('centuries', null);
               }}
             >
               All

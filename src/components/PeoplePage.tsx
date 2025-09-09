@@ -21,20 +21,6 @@ export const PeoplePage = () => {
   const sortParam = searchParams.get('sort');
   const orderParam = searchParams.get('order');
 
-  const filterPeople = async () => {
-    if (!name) {
-      return [...allPeople];
-    } else {
-      return allPeople.filter(person => {
-        return !!(
-          person.name.toLowerCase().includes(name) ||
-          (person.fatherName && person.fatherName.includes(name)) ||
-          (person.motherName && person.motherName.includes(name))
-        );
-      });
-    }
-  };
-
   useEffect(() => {
     const fetchPeople = async () => {
       setIsLoading(true);
@@ -56,7 +42,16 @@ export const PeoplePage = () => {
   useEffect(() => {
     const fetchFilteredPeople = async () => {
       try {
-        let filtered = await filterPeople();
+        let filtered = [...allPeople];
+
+        if (name) {
+          filtered = filtered.filter(
+            person =>
+              person.name.toLowerCase().includes(name.toLowerCase()) ||
+              person.fatherName?.toLowerCase().includes(name.toLowerCase()) ||
+              person.motherName?.toLowerCase().includes(name.toLowerCase()),
+          );
+        }
 
         if (sex) {
           filtered = filtered.filter(person => person.sex === sex);
@@ -70,9 +65,9 @@ export const PeoplePage = () => {
           );
         }
 
-        const multiplier = orderParam ? -1 : 1;
-
         if (sortParam) {
+          const multiplier = orderParam ? -1 : 1;
+
           filtered.sort((person1, person2) => {
             switch (sortParam) {
               case 'name':
@@ -96,7 +91,7 @@ export const PeoplePage = () => {
     };
 
     fetchFilteredPeople();
-  }, [name, sex, centuries, sortParam, orderParam]);
+  }, [allPeople, name, sex, centuries, sortParam, orderParam]);
 
   return (
     <>
@@ -105,7 +100,7 @@ export const PeoplePage = () => {
       <div className="block">
         <div className="columns is-desktop is-flex-direction-row-reverse">
           <div className="column is-7-tablet is-narrow-desktop">
-            {!isLoading && <PeopleFilters />}
+            {!isLoading && !errorMessage && people.length && <PeopleFilters />}
           </div>
 
           <div className="column">

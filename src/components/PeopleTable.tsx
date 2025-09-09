@@ -167,7 +167,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
           >
             <td>
               <NavLink
-                to={`/people/${person.slug}${location.search ? '/' + location.search : ''}`}
+                to={{
+                  pathname: `/people/${person.slug}`,
+                  search: location.search,
+                }}
                 className={cn({ 'has-text-danger': person.sex === 'f' })}
               >
                 {person.name}
@@ -181,7 +184,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               {person.motherName ? (
                 getMotherOrFatherByName(people, person.motherName) ? (
                   <NavLink
-                    to={`/people/${getMotherOrFatherByName(people, person.motherName)}${location.search}`}
+                    to={{
+                      pathname: `/people/${getMotherOrFatherByName(people, person.motherName)}`,
+                      search: location.search,
+                    }}
                     className="has-text-danger"
                   >
                     {person.motherName}
@@ -197,10 +203,10 @@ export const PeopleTable: React.FC<Props> = ({ people }) => {
               {person.fatherName ? (
                 getMotherOrFatherByName(people, person.fatherName) ? (
                   <NavLink
-                    to={
-                      `/people/${getMotherOrFatherByName(people, person.fatherName)}` +
-                      `${location.search ? '/' + location.search : ''}`
-                    }
+                    to={{
+                      pathname: `/people/${getMotherOrFatherByName(people, person.fatherName)}`,
+                      search: location.search,
+                    }}
                   >
                     {person.fatherName}
                   </NavLink>

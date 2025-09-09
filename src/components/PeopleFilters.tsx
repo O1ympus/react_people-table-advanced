@@ -88,7 +88,9 @@ export const PeopleFilters = () => {
             onChange={event => {
               event.preventDefault();
 
-              updateSearchParams('query', event.target.value);
+              const value = event.target.value;
+
+              updateSearchParams('query', value ? value : null);
             }}
           />
 
@@ -110,7 +112,7 @@ export const PeopleFilters = () => {
                     .getAll('century')
                     .some(century => century === '16'),
               })}
-              href="#/people?centuries=16"
+              href="#"
               onClick={event => {
                 event.preventDefault();
 
@@ -129,7 +131,7 @@ export const PeopleFilters = () => {
                     .getAll('century')
                     .some(century => century === '17'),
               })}
-              href="#/people?centuries=17"
+              href="#"
               onClick={event => {
                 event.preventDefault();
 
@@ -148,7 +150,7 @@ export const PeopleFilters = () => {
                     .getAll('century')
                     .some(century => century === '18'),
               })}
-              href="#/people?centuries=18"
+              href="#"
               onClick={event => {
                 event.preventDefault();
 
@@ -167,7 +169,7 @@ export const PeopleFilters = () => {
                     .getAll('century')
                     .some(century => century === '19'),
               })}
-              href="#/people?centuries=19"
+              href="#"
               onClick={event => {
                 event.preventDefault();
 
@@ -186,7 +188,7 @@ export const PeopleFilters = () => {
                     .getAll('century')
                     .some(century => century === '20'),
               })}
-              href="#/people?centuries=20"
+              href="#"
               onClick={event => {
                 event.preventDefault();
 
@@ -201,7 +203,7 @@ export const PeopleFilters = () => {
             <a
               data-cy="centuryALL"
               className="button is-success is-outlined"
-              href="#/people"
+              href="#"
               onClick={event => {
                 event.preventDefault();
 
@@ -217,7 +219,7 @@ export const PeopleFilters = () => {
       <div className="panel-block">
         <a
           className="button is-link is-outlined is-fullwidth"
-          href="#/people"
+          href="#"
           onClick={event => {
             event.preventDefault();
 
